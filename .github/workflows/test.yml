@@ -25,21 +25,21 @@ jobs:
       - run: npm run test
       - run: npm run build
 
-      - run: rm -f -env
+      - run: rm -f .env
       - name: Test name
         uses: ./
         with:
           variableName: ENV_VAR1
-      - run: cat .env && rm -f -env
+      - run: cat .env && rm -f .env
 
       - name: Test names
         uses: ./
         with:
           variableNames: ENV_VAR1,ENV_VAR2
-      - run: cat .env && rm -f -env
+      - run: cat .env && rm -f .env
 
       - name: Test regex
         uses: ./
         with:
           variableNamesByFilter: ^ENV_(VAR.*)
-      - run: cat .env && rm -f -env
+      - run: cat .env && rm -f .env
