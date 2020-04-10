@@ -1,0 +1,22 @@
+name: 'Environment variables to Dotenv'
+description: 'Appends environment variables to a dotenv file'
+inputs:
+  variableName:
+    description: 'Name of environment variable to append to a dotenv file'
+    required: false
+  variableNames:
+    description: 'Comma separated names of environment variables to append to a dotenv file'
+    required: false
+  variableNamesByFilter:
+    description: 'Regex to filter environment variables, all matching variables will be append to dotenv file'
+    required: false
+  envPath:
+    description: 'File path to write variable to'
+    required: false
+    default: '.env'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  icon: 'lock'
+  color: 'gray-dark'

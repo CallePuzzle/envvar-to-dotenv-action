@@ -1,0 +1,44 @@
+on: [push]
+
+name: Test
+env:
+  ENV_VAR1: 'value'
+  ENV_VAR2: 'value2'
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '11.x'
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ hashFiles('**/package-lock.json') }}
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
+      - run: npm install
+      - run: npm run test
+      - run: npm run build
+
+      - name: Test name
+        uses: ./
+        with:
+          variableName: ENV_VAR1
+      - run: cat .env
+
+      - name: Test names
+        uses: ./
+        with:
+          variableNames: ENV_VAR1,ENV_VAR2
+      - run: cat .env
+
+      - name: Test regex
+        uses: ./
+        with:
+          variableNamesByFilter: ^ENV_(VAR.*)
+      - run: cat .env
