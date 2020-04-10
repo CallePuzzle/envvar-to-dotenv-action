@@ -1,0 +1,23 @@
+{
+  "name": "envvar-to-dotenv-action",
+  "version": "0.1.0",
+  "description": "A GitHub action that appends environment variables to a dotenv file",
+  "main": "dist/index.js",
+  "license": "GNU",
+  "scripts": {
+    "build": "npx ncc build src/main.ts -o dist",
+    "test": "npx jest"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.2",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.1.1",
+    "@types/node": "^13.11.1",
+    "@zeit/ncc": "^0.21.0",
+    "jest": "^25.1.0",
+    "ts-jest": "^25.2.0",
+    "typescript": "^3.7.5"
+  }
+}
