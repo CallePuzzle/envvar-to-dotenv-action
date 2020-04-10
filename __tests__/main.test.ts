@@ -22,10 +22,19 @@ describe('Action run', () => {
     });
 
     it('should write variables to env', () => {
-        expectedFilePath = __dirname + '/results/expected.env';
+        expectedFilePath = __dirname + '/results/variable-name.env';
 
         main({
             variableName: 'SHELL',
+            envPath: envPath,
+        });
+    });
+
+    it('should write variables to env', () => {
+        expectedFilePath = __dirname + '/results/variable-names.env';
+
+        main({
+            variableNames: 'SHELL,EDITOR',
             envPath: envPath,
         });
     });

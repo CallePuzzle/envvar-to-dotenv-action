@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
-import * as fs from "fs";
-import dotenv, { DotenvParseOutput } from "dotenv";
+import {writeVariableName} from './writeVariableName'
+import {writeVariableNames} from './writeVariableNames'
+import {writeVariableNamesByFilter} from './writeVariableNamesByFilter'
 
 interface Input {
     variableName?: string
@@ -9,42 +10,26 @@ interface Input {
     envPath: string
 }
 
-interface Variable {
-    key: string
-    value: string
-    envPath: string
-}
-
 export const main = (input: Input): void => {
     if (input.variableName !== undefined) {
-        const value = process.env[input.variableName];
-        if (value !== undefined) {
-            write({
-                key: input.variableName,
-                value: value,
-                envPath: input.envPath
-            });
-        }
+        writeVariableName({
+            variableName: input.variableName,
+            envPath: input.envPath
+        })
+    }
+    if (input.variableNames !== undefined) {
+        writeVariableNames({
+            variableNames: input.variableNames,
+            envPath: input.envPath
+        })
+    }
+    if (input.variableNamesByFilter !== undefined) {
+        writeVariableNamesByFilter({
+            variableNamesByFilter: input.variableNamesByFilter,
+            envPath: input.envPath
+        })
     }
 };
-
-export const write = (variable: Variable): void => {
-
-    core.setSecret(variable.value);
-    core.exportVariable(variable.key, variable.value);
-
-    let content: DotenvParseOutput = {[variable.key]: variable.value};
-    if (fs.existsSync(variable.envPath)) {
-        content = {...dotenv.parse(fs.readFileSync(variable.envPath)), ...content};
-    }
-
-    const envVars = Object.entries(content)
-        .map(([key, value]) => `${key}=${value}`)
-        .join('\n');
-
-    fs.writeFileSync(variable.envPath, envVars);
-};
-
 
 try {
     main({
