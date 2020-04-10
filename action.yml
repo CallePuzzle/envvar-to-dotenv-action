@@ -1,26 +1,19 @@
-name: 'Variable to Dotenv'
-description: 'Appends a variable to a dotenv file'
+name: 'Environment variables to Dotenv'
+description: 'Appends environment variables to a dotenv file'
 inputs:
-  key:
-    description: 'Name of key'
+  variableName:
+    description: ''
     required: false
-  value:
-    description: 'Value of key'
+  variableNames:
+    description: ''
     required: false
-  default:
-    description: 'A default value for the key (if `value` is empty, this is used instead)'
+  variableNamesByFilter:
+    description: ''
     required: false
-  nullable:
-    description: 'If false, and the value resolved is empty, the variable will be omitted'
-    required: false
-    default: 'true'
   envPath:
     description: 'File path to write variable to'
     required: false
     default: '.env'
-  listKeyValues:
-    description: 'List'
-    required: false
 runs:
   using: 'node12'
   main: 'dist/index.js'
