@@ -224,18 +224,21 @@ const writeVariableNames_1 = __webpack_require__(308);
 const writeVariableNamesByFilter_1 = __webpack_require__(269);
 exports.main = (input) => {
     if (input.variableName !== undefined) {
+        core.info('variableName is not undefined: ' + input.variableName + ' ... writing');
         writeVariableName_1.writeVariableName({
             variableName: input.variableName,
             envPath: input.envPath
         });
     }
     if (input.variableNames !== undefined) {
+        core.info('variableNames is not undefined: ' + input.variableNames + ' ... writing');
         writeVariableNames_1.writeVariableNames({
             variableNames: input.variableNames,
             envPath: input.envPath
         });
     }
     if (input.variableNamesByFilter !== undefined) {
+        core.info('variableNamesByFilter is not undefined: ' + input.variableNamesByFilter + ' ... writing');
         writeVariableNamesByFilter_1.writeVariableNamesByFilter({
             variableNamesByFilter: input.variableNamesByFilter,
             envPath: input.envPath

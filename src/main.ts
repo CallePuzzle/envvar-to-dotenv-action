@@ -12,18 +12,21 @@ interface Input {
 
 export const main = (input: Input): void => {
     if (input.variableName !== undefined) {
+        core.info('variableName is not undefined: ' + input.variableName + ' ... writing');
         writeVariableName({
             variableName: input.variableName,
             envPath: input.envPath
         })
     }
     if (input.variableNames !== undefined) {
+        core.info('variableNames is not undefined: ' + input.variableNames + ' ... writing');
         writeVariableNames({
             variableNames: input.variableNames,
             envPath: input.envPath
         })
     }
     if (input.variableNamesByFilter !== undefined) {
+        core.info('variableNamesByFilter is not undefined: ' + input.variableNamesByFilter + ' ... writing');
         writeVariableNamesByFilter({
             variableNamesByFilter: input.variableNamesByFilter,
             envPath: input.envPath
