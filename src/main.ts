@@ -36,9 +36,9 @@ export const main = (input: Input): void => {
 
 try {
     main({
-        variableName: core.getInput('variableName'),
-        variableNames: core.getInput('variableNames'),
-        variableNamesByFilter: core.getInput('variableNamesByFilter'),
+        variableName: (core.getInput('variableName') === '') ? undefined : core.getInput('variableName'),
+        variableNames: (core.getInput('variableNames') === '') ? undefined : core.getInput('variableNames'),
+        variableNamesByFilter: (core.getInput('variableNamesByFilter') === '') ? undefined : core.getInput('variableNamesByFilter'),
         envPath: core.getInput('envPath'),
     });
 } catch (error) {
