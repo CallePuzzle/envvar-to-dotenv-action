@@ -170,7 +170,7 @@ module.exports = require("os");
 
 /***/ }),
 
-/***/ 131:
+/***/ 91:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
 "use strict";
@@ -189,108 +189,145 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const fs = __importStar(__webpack_require__(747));
 const dotenv_1 = __importDefault(__webpack_require__(63));
-exports.main = (input) => {
-    try {
-        single(input);
-    }
-    catch (e) {
-        core.info(e.message);
-        multi(input);
-    }
-};
-const multi = (input) => {
-    let listKeyValues = input.listKeyValues;
-    if (listKeyValues !== undefined) {
-        for (let index in listKeyValues) {
-            try {
-                exports.write({
-                    key: listKeyValues[index].key,
-                    value: listKeyValues[index].value,
-                    defaultValue: listKeyValues[index].defaultValue,
-                    isNullable: listKeyValues[index].isNullable,
-                    filePath: input.filePath,
-                });
-            }
-            catch (error) {
-                core.setFailed(error);
-            }
-        }
-    }
-};
-const single = (input) => {
-    let single = {
-        key: '',
-        value: '',
-        defaultValue: '',
-        filePath: '',
-        isNullable: true
-    };
-    if (input.key !== undefined &&
-        input.value !== undefined &&
-        input.defaultValue !== undefined &&
-        input.isNullable !== undefined) {
-        single.key = input.key;
-        single.value = input.value;
-        single.defaultValue = input.defaultValue;
-        single.isNullable = input.isNullable;
-        single.filePath = input.filePath;
-        try {
-            exports.write(single);
-        }
-        catch (error) {
-            core.setFailed(error);
-        }
-    }
-    else {
-        throw new Error("Input doesn't have all Variable properties");
-    }
-};
 exports.write = (variable) => {
-    let value = variable.value !== '' ? variable.value : variable.defaultValue;
-    if (value === '') {
-        if (!variable.isNullable) {
-            core.info(`Skipping '${variable.key}' as it is not nullable and has no value`);
-            return;
-        }
-        core.info(`Writing empty variable '${variable.key}'`);
-    }
-    else {
-        core.setSecret(value);
-    }
-    core.exportVariable(variable.key, value);
-    let content = { [variable.key]: value };
-    if (fs.existsSync(variable.filePath)) {
-        content = Object.assign(Object.assign({}, dotenv_1.default.parse(fs.readFileSync(variable.filePath))), content);
+    core.setSecret(variable.value);
+    core.exportVariable(variable.key, variable.value);
+    let content = { [variable.key]: variable.value };
+    if (fs.existsSync(variable.envPath)) {
+        content = Object.assign(Object.assign({}, dotenv_1.default.parse(fs.readFileSync(variable.envPath))), content);
     }
     const envVars = Object.entries(content)
         .map(([key, value]) => `${key}=${value}`)
         .join('\n');
-    fs.writeFileSync(variable.filePath, envVars);
+    fs.writeFileSync(variable.envPath, envVars);
 };
-exports.getKey = (key) => {
-    return (key === '') ? undefined : key;
+
+
+/***/ }),
+
+/***/ 131:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
 };
-exports.getListKeyValues = (listKeyValues) => {
-    if (listKeyValues === '') {
-        return undefined;
+Object.defineProperty(exports, "__esModule", { value: true });
+const core = __importStar(__webpack_require__(470));
+const writeVariableName_1 = __webpack_require__(287);
+const writeVariableNames_1 = __webpack_require__(308);
+const writeVariableNamesByFilter_1 = __webpack_require__(269);
+exports.main = (input) => {
+    if (input.variableName !== undefined) {
+        writeVariableName_1.writeVariableName({
+            variableName: input.variableName,
+            envPath: input.envPath
+        });
     }
-    else {
-        return JSON.parse(listKeyValues);
+    if (input.variableNames !== undefined) {
+        writeVariableNames_1.writeVariableNames({
+            variableNames: input.variableNames,
+            envPath: input.envPath
+        });
+    }
+    if (input.variableNamesByFilter !== undefined) {
+        writeVariableNamesByFilter_1.writeVariableNamesByFilter({
+            variableNamesByFilter: input.variableNamesByFilter,
+            envPath: input.envPath
+        });
     }
 };
 try {
     exports.main({
-        key: exports.getKey(core.getInput('key')),
-        value: core.getInput('value'),
-        defaultValue: core.getInput('default'),
-        filePath: core.getInput('envPath'),
-        isNullable: core.getInput('nullable') === 'true',
-        listKeyValues: exports.getListKeyValues(core.getInput('listKeyValues')),
+        variableName: core.getInput('variableName'),
+        variableNames: core.getInput('variableNames'),
+        variableNamesByFilter: core.getInput('variableNamesByFilter'),
+        envPath: core.getInput('envPath'),
     });
 }
 catch (error) {
     core.setFailed(error);
 }
+
+
+/***/ }),
+
+/***/ 269:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const write_1 = __webpack_require__(91);
+exports.writeVariableNamesByFilter = (input) => {
+    for (let envVar in process.env) {
+        const re = new RegExp(input.variableNamesByFilter);
+        if (re.test(envVar)) {
+            const value = process.env[envVar];
+            // Regex has group
+            const regex = re.exec(envVar);
+            if (regex !== null && typeof regex[1] === "string") {
+                envVar = regex[1];
+            }
+            if (value !== undefined) {
+                write_1.write({
+                    key: envVar,
+                    value: value,
+                    envPath: input.envPath
+                });
+            }
+        }
+    }
+};
+
+
+/***/ }),
+
+/***/ 287:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const write_1 = __webpack_require__(91);
+exports.writeVariableName = (input) => {
+    const value = process.env[input.variableName];
+    if (value !== undefined) {
+        write_1.write({
+            key: input.variableName,
+            value: value,
+            envPath: input.envPath
+        });
+    }
+};
+
+
+/***/ }),
+
+/***/ 308:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const write_1 = __webpack_require__(91);
+exports.writeVariableNames = (input) => {
+    for (const variableName of input.variableNames.split(',')) {
+        const value = process.env[variableName];
+        if (value !== undefined) {
+            write_1.write({
+                key: variableName,
+                value: value,
+                envPath: input.envPath
+            });
+        }
+    }
+};
 
 
 /***/ }),

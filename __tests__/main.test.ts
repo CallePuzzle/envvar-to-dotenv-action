@@ -11,6 +11,9 @@ describe('Action run', () => {
     process.env.KEY1 = 'VALUE1';
     process.env.KEY2 = 'VALUE2';
 
+    process.env.PRE_KEY1 = 'VALUE1';
+    process.env.PRE_KEY2 = 'VALUE2';
+
 
     beforeEach(() => {
         if (fs.existsSync(envPath)) {
@@ -48,6 +51,15 @@ describe('Action run', () => {
 
         main({
             variableNamesByFilter: '^KEY',
+            envPath: envPath,
+        });
+    });
+
+    it('test regex ^PRE_(KEY.*)', () => {
+        expectedFilePath = __dirname + '/results/variable-names.env';
+
+        main({
+            variableNamesByFilter: '^PRE_(KEY.*)',
             envPath: envPath,
         });
     });
