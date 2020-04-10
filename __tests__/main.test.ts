@@ -8,6 +8,10 @@ describe('Action run', () => {
 
     let expectedFilePath: string;
 
+    process.env.KEY1 = 'VALUE1';
+    process.env.KEY2 = 'VALUE2';
+
+
     beforeEach(() => {
         if (fs.existsSync(envPath)) {
             fs.unlinkSync(envPath);
@@ -21,20 +25,29 @@ describe('Action run', () => {
         expect(expected.equals(actual)).toBe(true);
     });
 
-    it('should write variables to env', () => {
+    it('test variable name key1', () => {
         expectedFilePath = __dirname + '/results/variable-name.env';
 
         main({
-            variableName: 'SHELL',
+            variableName: 'KEY1',
             envPath: envPath,
         });
     });
 
-    it('should write variables to env', () => {
+    it('test variable names key1 and key2', () => {
         expectedFilePath = __dirname + '/results/variable-names.env';
 
         main({
-            variableNames: 'SHELL,EDITOR',
+            variableNames: 'KEY1,KEY2',
+            envPath: envPath,
+        });
+    });
+
+    it('test regex ^KEY', () => {
+        expectedFilePath = __dirname + '/results/variable-names.env';
+
+        main({
+            variableNamesByFilter: '^KEY',
             envPath: envPath,
         });
     });
