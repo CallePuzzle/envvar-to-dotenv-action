@@ -9,7 +9,7 @@
     "test": "npx jest"
   },
   "dependencies": {
-    "@actions/core": "^1.2.2",
+    "@actions/core": "^1.2.4",
     "dotenv": "^8.2.0"
   },
   "devDependencies": {
