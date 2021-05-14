@@ -19,14 +19,14 @@ jobs:
       - uses: actions/cache@v1
         with:
           path: node_modules
-          key: ${{ runner.os }}-build-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ hashFiles('**/package-lock.json') }}
+            ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
-      - run: npm install
-      - run: npm run test
-      - run: npm run build
+      - run: yarn install --pure-lockfile
+      - run: yarn test
+      - run: yarn build
 
       - name: Test name
         uses: ./
