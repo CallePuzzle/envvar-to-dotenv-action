@@ -42,5 +42,5 @@ try {
         envPath: core.getInput('envPath'),
     });
 } catch (error) {
-    core.setFailed(error);
+    core.setFailed(`Action failed with error ${error}`);
 }
