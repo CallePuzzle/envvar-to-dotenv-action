@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "A GitHub action that appends environment variables to a dotenv file",
   "main": "dist/index.js",
-  "license": "GNU",
+  "license": "GPL-3.0-only",
   "scripts": {
     "build": "npx ncc build src/main.ts -o dist",
     "test": "npx jest"
