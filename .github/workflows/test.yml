@@ -5,8 +5,8 @@ on:
       - main
 
 env:
-  ENV_VAR1: 'value'
-  ENV_VAR2: 'value2'
+  ENV_VAR1: "value"
+  ENV_VAR2: "value2"
 jobs:
   test:
     name: test
@@ -16,7 +16,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: "20.x"
 
       - uses: actions/cache@v4
         with:
@@ -26,9 +26,9 @@ jobs:
             ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
-      - run: yarn install --pure-lockfile
-      - run: yarn test
-      - run: yarn build
+      - run: bun install --frozen-lockfile
+      - run: bun run test
+      - run: bun run build
 
       - name: Test name
         uses: ./
