@@ -21,11 +21,15 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: node_modules
-          key: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-build-${{ hashFiles('**/bun.lock') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}
+            ${{ runner.os }}-build-${{ hashFiles('**/bun.lock') }}
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
       - run: bun install --frozen-lockfile
       - run: bun run test
       - run: bun run build
